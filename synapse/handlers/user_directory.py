@@ -160,6 +160,7 @@ class UserDirectoryHandler(StateDeltasHandler):
         # Remove any spammy users from the results.
         non_spammy_users = []
         for user in results["results"]:
+            user['searcher_id'] = user_id
             if not await self._spam_checker_module_callbacks.check_username_for_spam(
                 user
             ):
