@@ -1125,6 +1125,21 @@
         "28d"
       ]
     },
+    "redaction_allowed_period": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/duration"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "How long after an `m.room.message` was sent a local user is still allowed to redact it. If a local user tries to redact a `m.room.message` older than this period Synapse responds with `403 M_FORBIDDEN` and does not redact the event.\n\nOnly applies to `m.room.message` events redacted by local users.  Redactions of other event types and redactions received over federation are unaffected. When the target of the redaction is an edit (`m.replace`), the age and type are taken from the original event and not the edit.\n\nSet to `null` (the default) to disable, allowing events to be redacted at any time.",
+      "default": null,
+      "examples": [
+        "7d"
+      ]
+    },
     "forgotten_room_retention_period": {
       "oneOf": [
         {
@@ -4093,7 +4108,7 @@
     },
     "encryption_enabled_by_default_for_room_type": {
       "type": "string",
-      "description": "Controls whether locally-created rooms should be end-to-end encrypted by default.\n\nPossible options are \"all\", \"invite\", and \"off\". They are defined as:\n\n* \"all\": any locally-created room\n* \"invite\": any room created with the `private_chat` or `trusted_private_chat` room creation presets\n* \"off\": this option will take no effect\n\nNote that this option will only affect rooms created after it is set. It will also not affect rooms created by other servers.",
+      "description": "Controls whether locally-created rooms should be end-to-end encrypted by default.\n\nPossible options are \"all\", \"invite\", and \"off\". They are defined as:\n\n* \"all\": any locally-created room\n* \"invite\": any room created with the `private_chat` or `trusted_private_chat` room creation presets\n* \"off\": this option will take no effect\n\nNote that this option will only affect rooms created after it is set. It will also not affect rooms created by other servers.\n\nA client may supply its own `m.room.encryption` event in the `initial_state` of its `/createRoom` request. If that event is valid (it specifies an `algorithm` as a string), it takes precedence and this option will not overwrite it, allowing the client to, for example, choose a different encryption algorithm. An empty or otherwise invalid `m.room.encryption` event does not disable forced encryption: the default will still be applied on top of it.",
       "enum": [
         "all",
         "invite",
